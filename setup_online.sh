@@ -6,7 +6,7 @@ IS_INIT=0
 #是否一键安装
 IS_AKEY=0
 
-config_path='/tmp/zimeiconf'
+config_path='/var/zimeiconf'
 pip3_downpath='/var/pipdownpath'
 
 CONFIG=/boot/config.txt
@@ -329,10 +329,8 @@ setup_sound(){
 		return 0
 	fi
 
-	sudo chmod -R 777 ${config_path}/Github/
-
-	cd ${config_path}/Github/
-
+	sudo git clone https://github.com/waveshare/WM8960-Audio-HAT
+	cd WM8960-Audio-HAT
 	sudo ./install.sh
 
 	if [ $IS_AKEY -eq 0 ]; then start; fi
@@ -398,36 +396,33 @@ setup_other(){
 	format_echo "安装ntpdate功能包"
 	sudo apt-get -y install ntpdate
 
-	format_echo "PIP安装pycurl包"
-	sudo pip3 install pycurl
-	sudo pip3 download pycurl -d ${pip3_downpath}
+	format_echo "PIP3下载pycurl包"
+	sudo pip3 download -d ${pip3_downpath} pycurl==7.44.1
 
-	format_echo "PIP安装psutil包"
-	sudo pip3 install psutil
-	sudo pip3 download psutil -d ${pip3_downpath}
+	format_echo "PIP3下载psutil包"
+	sudo pip3 download -d ${pip3_downpath} psutil==5.8.0
 
-	format_echo "PIP安装websocket_client包"
-	sudo pip3 install websocket_client
-	sudo pip3 download websocket_client -d ${pip3_downpath}
+	format_echo "PIP3下载websocket_client包"
+	sudo pip3 download -d ${pip3_downpath} websocket_client==1.2.1
 
-	format_echo "PIP安装webrtcvad包"
-	sudo pip3 install webrtcvad
-	sudo pip3 download webrtcvad -d ${pip3_downpath}
+	format_echo "PIP3下载webrtcvad包"
+	sudo pip3 download -d ${pip3_downpath} webrtcvad==2.0.10
 
-	format_echo "PIP安装imutils包"
-	sudo pip3 install imutils
-	sudo pip3 download imutils -d ${pip3_downpath}
+	format_echo "PIP3下载imutils包"
+	sudo pip3 download -d ${pip3_downpath} imutils==0.5.4
 
-	format_echo "PIP安装opencv包"
-	sudo pip3 install opencv_python
-	sudo pip3 install opencv_contrib_python
-	sudo pip3 download opencv_python -d ${pip3_downpath}
-	sudo pip3 download opencv_contrib_python -d ${pip3_downpath}
+	format_echo "PIP3下载opencv包"
+	sudo pip3 download -d ${pip3_downpath} opencv_python==4.5.3.56
+	sudo pip3 download -d ${pip3_downpath} opencv_contrib_python==4.5.3.56
 
+	format_echo "PIP3下载ruamel.yaml包"
+	sudo pip3 download -d ${pip3_downpath} ruamel.yaml==0.17.16
 
-	format_echo "PIP安装ruamel.yaml包"
-	sudo pip3 install ruamel.yaml
-	sudo pip3 download ruamel.yaml -d ${pip3_downpath}
+	format_echo "PIP3安装所有.whl类型库"
+	sudo pip3 install ${pip3_downpath}/*.whl
+
+	format_echo "PIP3安装所有.gz类型包"
+	sudo pip3 install ${pip3_downpath}/*.gz
 
 	sleep 1
 
