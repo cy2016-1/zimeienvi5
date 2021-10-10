@@ -371,7 +371,7 @@ setup_mosquitto(){
 	format_echo "开始安装mqtt服务器"
 
 	format_echo "安装依赖"
-	sudo apt-get install libssl-dev libc-ares-dev uuid-dev g++
+	sudo apt-get install -y libssl-dev libc-ares-dev uuid-dev g++
 
 	cd ${config_path}
 	sudo tar zxfv ${config_path}/mqtt/mosquitto-1.6.9.tar.gz
