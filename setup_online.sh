@@ -151,6 +151,37 @@ start(){
 	esac
 }
 
+# 更新默认源为国内源
+replace_sources(){
+	format_echo "备份默认源"
+	sudo mkdir -p /etc/apt_bak/sources.list.d
+	if [ ! -f "/etc/apt_bak/sources.list.default" ];then
+		sudo mv /etc/apt/sources.list /etc/apt_bak/sources.list.default
+	fi
+
+	if [ ! -f "/etc/apt_bak/sources.list.d/raspi.list.default" ];then
+		sudo mv /etc/apt/sources.list.d/raspi.list /etc/apt_bak/sources.list.d/raspi.list.default
+	fi
+
+	format_echo "替换国内源"
+	if [ -f "${config_path}/config/sources.list.tsinghua" ];then
+		sudo mv ${config_path}/config/sources.list.tsinghua /etc/apt/sources.list
+	fi
+	if [ -f "${config_path}/config/raspi.list.tsinghua" ];then
+		sudo mv ${config_path}/config/raspi.list.tsinghua /etc/apt/sources.list.d/raspi.list
+	fi
+
+	format_echo "更新软件索引"
+	sudo apt-get update
+
+	sudo apt -y --fix-broken install
+
+	format_echo "还原源列表完成" 1
+	sleep 1
+
+	if [ $IS_AKEY -eq 0 ]; then start; fi
+}
+
 ###
  # @说明: 修改用户密码
 ###
@@ -435,6 +466,7 @@ akey_setup(){
 	set_userpass
 	set_localtime
 	setup_camera
+	replace_sources
 	setup_sound
 	setup_other
 	setup_mosquitto
