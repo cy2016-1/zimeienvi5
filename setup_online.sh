@@ -13,7 +13,7 @@ CONFIG=/boot/config.txt
 
 THIS_PATH=$(cd `dirname $0`; pwd)
 
-#格式化echo 
+#格式化echo
 format_echo(){
 	if [ $2 ];then
 		echo "\033[31m${1}\033[0m"
@@ -179,28 +179,28 @@ set_system(){
 	sudo cp -f ${config_path}/config/splash.png /usr/share/plymouth/themes/pix/splash.png
 	sleep 1
 
-	format_echo "设备任务栏"
-	sudo mv /home/pi/.config/lxpanel/LXDE-pi/panels/panel /home/pi/.config/lxpanel/LXDE-pi/panels/panel_bak
-	sleep 1
+	# format_echo "设备任务栏"
+	# sudo mv /home/pi/.config/lxpanel/LXDE-pi/panels/panel /home/pi/.config/lxpanel/LXDE-pi/panels/panel_bak
+	# sleep 1
 
-	sudo mkdir -p /home/pi/.config/lxpanel/LXDE-pi/panels
-	sleep 1
+	# sudo mkdir -p /home/pi/.config/lxpanel/LXDE-pi/panels
+	# sleep 1
 
-	sudo cp -f ${config_path}/config/panel /home/pi/.config/lxpanel/LXDE-pi/panels/panel
+	# sudo cp -f ${config_path}/config/panel /home/pi/.config/lxpanel/LXDE-pi/panels/panel
 
-	format_echo "设置桌面"
-	sudo mv /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf.bak
-	sleep 1
+	# format_echo "设置桌面"
+	# sudo mv /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf.bak
+	# sleep 1
 
-	sudo mkdir -p /home/pi/.config/pcmanfm/LXDE-pi
-	sleep 1
+	# sudo mkdir -p /home/pi/.config/pcmanfm/LXDE-pi
+	# sleep 1
 
-	sudo cp -f ${config_path}/config/desktop-items-0.conf /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
+	# sudo cp -f ${config_path}/config/desktop-items-0.conf /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf
 
 	format_echo "设置桌面背景"
 	sudo rm -f /usr/share/rpd-wallpaper/road.jpg
 	sleep 1
-	
+
 	sudo cp -f ${config_path}/config/road.jpg /usr/share/rpd-wallpaper/road.jpg
 
 	format_echo "关闭屏幕保护"
@@ -295,7 +295,7 @@ setup_camera() {
     STATUS="启用"
     return 1
   fi
-  
+
   if [ $RET -eq 1 ]; then
     set_config_var start_x 1 $CONFIG
     CUR_GPU_MEM=$(get_config_var gpu_mem $CONFIG)
@@ -310,7 +310,7 @@ setup_camera() {
   else
     return $RET
   fi
-  
+
   if [ $IS_AKEY -eq 0 ]; then
     whiptail --msgbox "摄像头已 $STATUS" 20 60 1
   fi
@@ -405,7 +405,7 @@ setup_other(){
 	format_echo "PIP安装psutil包"
 	sudo pip3 install psutil
 	sudo pip3 download psutil -d ${pip3_downpath}
-	
+
 	format_echo "PIP安装websocket_client包"
 	sudo pip3 install websocket_client
 	sudo pip3 download websocket_client -d ${pip3_downpath}
@@ -430,8 +430,8 @@ setup_other(){
 	sudo pip3 download ruamel.yaml -d ${pip3_downpath}
 
 	sleep 1
-	
-	if [ $IS_AKEY -eq 0 ]; then start; fi	
+
+	if [ $IS_AKEY -eq 0 ]; then start; fi
 }
 
 #一键安装全部环境
