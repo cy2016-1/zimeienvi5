@@ -12,7 +12,7 @@ CONFIG=/boot/config.txt
 
 THIS_PATH=$(cd `dirname $0`; pwd)
 
-#格式化echo 
+#格式化echo
 format_echo(){
 	if [ $2 ];then
 		echo "\033[31m${1}\033[0m"
@@ -67,6 +67,10 @@ EOF
 
 #删除一些不要的软件
 del_garbage(){
+	systemctl --user stop pulseaudio.socket
+	systemctl --user stop pulseaudio.service
+	sudo killall pulseaudio
+	sudo apt-get remove pulseaudio -y
 	sudo rm -f /etc/xdg/autostart/piwiz.desktop
 }
 del_garbage
@@ -183,15 +187,6 @@ set_system(){
 	sudo cp -f ${config_path}/config/splash.png /usr/share/plymouth/themes/pix/splash.png
 	sleep 1
 
-	format_echo "设备任务栏"
-	sudo mv /home/pi/.config/lxpanel/LXDE-pi/panels/panel /home/pi/.config/lxpanel/LXDE-pi/panels/panel_bak
-	sleep 1
-
-	sudo mkdir -p /home/pi/.config/lxpanel/LXDE-pi/panels
-	sleep 1
-
-	sudo cp -f ${config_path}/config/panel /home/pi/.config/lxpanel/LXDE-pi/panels/panel
-
 	format_echo "设置桌面"
 	sudo mv /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf /home/pi/.config/pcmanfm/LXDE-pi/desktop-items-0.conf.bak
 	sleep 1
@@ -204,7 +199,7 @@ set_system(){
 	format_echo "设置桌面背景"
 	sudo rm -f /usr/share/rpd-wallpaper/road.jpg
 	sleep 1
-	
+
 	sudo cp -f ${config_path}/config/road.jpg /usr/share/rpd-wallpaper/road.jpg
 
 	format_echo "关闭屏幕保护"
@@ -264,7 +259,7 @@ set_localtime(){
 #安装初始化
 setup_init(){
 	if [ $IS_INIT -eq 1 ]
-	then 
+	then
 		format_echo "离线安装环境已经初始化" 1
 		sleep 1
 		return 0
@@ -318,7 +313,7 @@ reduct_sources(){
 	sudo apt-get update
 
 	sudo apt -y --fix-broken install
-	
+
 	format_echo "还原源列表完成" 1
 	sleep 1
 
@@ -363,7 +358,7 @@ setup_camera() {
     STATUS="启用"
     return 1
   fi
-  
+
   if [ $RET -eq 1 ]; then
     set_config_var start_x 1 $CONFIG
     CUR_GPU_MEM=$(get_config_var gpu_mem $CONFIG)
@@ -378,7 +373,7 @@ setup_camera() {
   else
     return $RET
   fi
-  
+
   if [ $IS_AKEY -eq 0 ]; then
     whiptail --msgbox "摄像头已 $STATUS" 20 60 1
   fi
@@ -397,14 +392,14 @@ setup_sound(){
 		return 0
 	fi
 
-	# 使用本地源安装 
+	# 使用本地源安装
 	setup_init
 
 	format_echo "安装声卡依赖"
-	sudo dpkg -i ${config_path}/sound/raspberrypi-kernel-headers_*.deb	
-	sudo dpkg -i ${config_path}/sound/raspberrypi-kernel_*.deb
-	sudo dpkg -i ${config_path}/sound/dkms_*.deb
-	sudo dpkg -i ${config_path}/sound/libasound2-plugins_*.deb
+	sudo dpkg -i ${config_path}/apt_get/raspberrypi-kernel-headers_*.deb
+	sudo dpkg -i ${config_path}/apt_get/raspberrypi-kernel_*.deb
+	sudo dpkg -i ${config_path}/apt_get/dkms_*.deb
+	sudo dpkg -i ${config_path}/apt_get/libasound2-plugins_*.deb
 
 	sudo chmod -R 777 ${config_path}/wm8960/
 
@@ -423,8 +418,8 @@ setup_mosquitto(){
 	sudo dpkg -i ${config_path}/apt_get/libssl*.deb
 	sudo dpkg -i ${config_path}/apt_get/libc-ares*.deb
 	sudo dpkg -i ${config_path}/apt_get/uuid*.deb
-	sudo tar zxfv ${config_path}/mqtt/mosquitto-1.6.9.tar.gz
-	cd ${config_path}/mosquitto-1.6.9
+	sudo tar zxfv ${config_path}/mqtt/mosquitto-*.tar.gz
+	cd ${config_path}/mosquitto-*
 	sudo make
 	sudo make install
 	sudo ln -s /usr/local/lib/libmosquitto.so.1 /usr/lib/libmosquitto.so.1
@@ -448,10 +443,10 @@ setup_other(){
 
 	format_echo "PIP3安装.gz类型包"
 	sudo pip3 install ${config_path}/pip/*.gz
-	
+
 	sleep 1
-	
-	if [ $IS_AKEY -eq 0 ]; then start; fi	
+
+	if [ $IS_AKEY -eq 0 ]; then start; fi
 }
 
 #一键安装全部环境
