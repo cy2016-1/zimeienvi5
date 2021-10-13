@@ -73,7 +73,6 @@ del_garbage(){
 	sudo apt-get remove pulseaudio -y
 	sudo rm -f /etc/xdg/autostart/piwiz.desktop
 }
-del_garbage
 
 # 设置菜单大小
 calc_wt_size() {
@@ -452,6 +451,7 @@ setup_other(){
 #一键安装全部环境
 akey_setup(){
 	IS_AKEY=1
+	del_garbage
 	set_userpass
 	set_localtime
 	setup_camera
