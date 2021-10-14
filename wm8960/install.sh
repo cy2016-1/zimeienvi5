@@ -19,8 +19,8 @@ ver="1.0"
 marker="0.0.0"
 
 apt update
-apt-get -y install raspberrypi-kernel-headers raspberrypi-kernel 
-apt-get -y install  dkms git i2c-tools libasound2-plugins
+#apt-get -y install raspberrypi-kernel-headers raspberrypi-kernel
+#apt-get -y install  dkms git i2c-tools libasound2-plugins
 
 # locate currently installed kernels (may be different to running kernel if
 # it's just been updated)
@@ -55,12 +55,12 @@ cp wm8960-soundcard.dtbo /boot/overlays
 
 #set kernel moduels
 grep -q "i2c-dev" /etc/modules || \
-  echo "i2c-dev" >> /etc/modules  
+  echo "i2c-dev" >> /etc/modules
 grep -q "snd-soc-wm8960" /etc/modules || \
-  echo "snd-soc-wm8960" >> /etc/modules  
+  echo "snd-soc-wm8960" >> /etc/modules
 grep -q "snd-soc-wm8960-soundcard" /etc/modules || \
-  echo "snd-soc-wm8960-soundcard" >> /etc/modules  
-  
+  echo "snd-soc-wm8960-soundcard" >> /etc/modules
+
 #set dtoverlays
 sed -i -e 's:#dtparam=i2c_arm=on:dtparam=i2c_arm=on:g'  /boot/config.txt || true
 grep -q "dtoverlay=i2s-mmap" /boot/config.txt || \
@@ -71,17 +71,17 @@ grep -q "dtparam=i2s=on" /boot/config.txt || \
 
 #grep -q "dtoverlay=wm8960-soundcard" /boot/config.txt || \
 #  echo "dtoverlay=wm8960-soundcard" >> /boot/config.txt
-  
+
 #install config files
 mkdir /etc/wm8960-soundcard || true
 cp *.conf /etc/wm8960-soundcard
 cp *.state /etc/wm8960-soundcard
 
-#set service 
+#set service
 cp wm8960-soundcard /usr/bin/
 cp wm8960-soundcard.service /lib/systemd/system/
-systemctl enable  wm8960-soundcard.service 
-systemctl start wm8960-soundcard                                
+systemctl enable  wm8960-soundcard.service
+systemctl start wm8960-soundcard
 
 echo "------------------------------------------------------"
 echo "Please reboot your raspberry pi to apply all settings"
